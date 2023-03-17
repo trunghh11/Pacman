@@ -1,10 +1,20 @@
 #include "../Source/Menu/Button.h"
 
+Button::Button(){}
+
 Button::Button(int Width, int Height, int scrPosX, int scrPosY) {
     buttonRect = {scrPosX, scrPosY, Width, Height};
     normalText = new TextManager(24);
     selectText = new TextManager(26);
     selectTextDetail = new TextManager(18);
+}
+
+void Button::setButtonOutLine(int scrPosX, int scrPosY, int Width, int Height) {
+    buttonOutLineRect = {scrPosX, scrPosY, Width, Height}; //viền
+}
+
+SDL_Rect Button::getButtonOutLine() {
+    return buttonOutLineRect;
 }
 
 void Button::loadButton(SDL_Renderer* &renderer, std::string text) {
@@ -44,6 +54,19 @@ void Button::renderButton(SDL_Renderer* &renderer) {
     else if (buttonStatus == BUTTON_OUT) {
         SDL_SetRenderDrawColor(renderer, normalColor.r, normalColor.g, normalColor.b, normalColor.a);
         normalText->renderText(renderer, buttonRect.x + buttonRect.w / 2, buttonRect.y + buttonRect.h / 2, TextManager::CENTER);
+    }
+}
+
+void Button::renderButOutLine(SDL_Renderer* &renderer, SDL_Rect buttonOutLineRect, int thickness) {
+    if (buttonStatus == BUTTON_IN) {
+        //draw border
+        SDL_Rect rect;
+        for (int i = 0; i < thickness; i++) {
+            rect ={buttonOutLineRect.x - i, buttonOutLineRect.y - i, buttonOutLineRect.w + i*2, buttonOutLineRect.h + i*2};
+            SDL_SetRenderDrawColor(renderer, 252, 207, 0, 255);
+            SDL_RenderDrawRect(renderer, &rect);
+        }
+
     }
 }
 

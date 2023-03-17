@@ -103,7 +103,7 @@ void Menu::render(SDL_Renderer* &renderer, const std::vector<std::string> &score
                 int j = i;
                 std::string s = std::to_string(j+1) + "\t" + scoreData[i];
                 scoreText->loadRenderText(renderer, s, {0, 0, 0, 255});
-                scoreText->renderText(renderer, 441, 160 + 40 * (i - arrowHSPos), TextManager::CENTER);
+                scoreText->renderText(renderer, 345, 90 + 40 * (i - arrowHSPos), TextManager::CENTER);
                 
             }
         }

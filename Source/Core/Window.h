@@ -3,9 +3,9 @@
 #ifndef _WINDOW_H_
 #define _WINDOW_H_
 
-#include <SDL.h>
-#include <SDL_ttf.h>
-#include <SDL_mixer.h>
+#include "../../include/SDL2/SDL.h"
+#include "../../include/SDL2/SDL_ttf.h"
+#include "../../include/SDL2/SDL_mixer.h"
 #include <string>
 #include <vector>
 #include "PlayStateManager.h"

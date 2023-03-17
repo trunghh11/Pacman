@@ -37,8 +37,8 @@ class GameManager {
 
         SDL_Texture* egBoard;
         SDL_Texture* hsBoard;
-        Button* yesBut;
-        Button* noBut;
+        Button* yesButOutLine;
+        Button* noButOutLine;
         Mix_Chunk* navigationSound = Mix_LoadWAV("Source/Assets/Sound/navigationButton.wav");
         Mix_Chunk* selectionSound = Mix_LoadWAV("Source/Assets/Sound/selectButton.wav");
     protected:

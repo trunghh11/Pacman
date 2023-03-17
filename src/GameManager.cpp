@@ -1,6 +1,7 @@
 #include "../Source/Manager/GameManager.h"
 #include <iostream>
 #include <string>
+#include <vector>
 
 GameManager::GameManager(SDL_Renderer* &renderer) {
     level = 1;
@@ -24,8 +25,10 @@ GameManager::GameManager(SDL_Renderer* &renderer) {
     playerName->loadRenderText(renderer, playername.c_str(), {255, 255, 255, 255});
     egBoard = loadImage(renderer, "Source/Assets/Menu_Image/endgame.png");
     hsBoard = loadImage(renderer, "Source/Assets/Menu_Image/newHighscore.png");
-    yesBut = new Button(70, 30, 478, 250); yesBut->loadButton(renderer, "Yes"); yesBut->setStatus(Button::BUTTON_IN);
-    noBut  = new Button(70, 30, 580, 250); noBut ->loadButton(renderer, "No");  noBut ->setStatus(Button::BUTTON_OUT);
+    yesButOutLine = new Button;
+    noButOutLine = new Button;
+    yesButOutLine ->setButtonOutLine(278, 316, 65, 35); yesButOutLine->setStatus(Button::BUTTON_IN);
+    noButOutLine ->setButtonOutLine(540, 315, 65, 35); noButOutLine ->setStatus(Button::BUTTON_OUT);
 }
 
 GameManager::~GameManager() {
@@ -63,8 +66,8 @@ void GameManager::reset() {
     CLYDE_COIN_LIMIT = 90;
     playerDecision = WAITING;
     pos = -1;
-    yesBut->setStatus(Button::BUTTON_IN);
-    noBut->setStatus(Button::BUTTON_OUT);
+    yesButOutLine->setStatus(Button::BUTTON_IN);
+    noButOutLine->setStatus(Button::BUTTON_OUT);
 }
 
 void GameManager::eatCoins(const int typeOfCoin) {
@@ -186,14 +189,14 @@ void GameManager::handleEGBoard(SDL_Event &e, std::vector<std::string> &scoreDat
             if (e.key.keysym.sym == SDLK_d || e.key.keysym.sym == SDLK_RIGHT) {
                 Mix_PlayChannel(7, navigationSound, 0);
                 currentBut = 2;
-                noBut ->setStatus(Button::BUTTON_IN);
-                yesBut->setStatus(Button::BUTTON_OUT);
+                noButOutLine ->setStatus(Button::BUTTON_IN);
+                yesButOutLine->setStatus(Button::BUTTON_OUT);
             }
             else if (e.key.keysym.sym == SDLK_a || e.key.keysym.sym == SDLK_LEFT) {
                 Mix_PlayChannel(7, navigationSound, 0);
                 currentBut = 1;
-                yesBut->setStatus(Button::BUTTON_IN);
-                noBut ->setStatus(Button::BUTTON_OUT);
+                yesButOutLine->setStatus(Button::BUTTON_IN);
+                noButOutLine ->setStatus(Button::BUTTON_OUT);
             }
             else if (e.key.keysym.sym == SDLK_RETURN) {
                 Mix_PlayChannel(7, selectionSound, 0);
@@ -206,12 +209,14 @@ void GameManager::handleEGBoard(SDL_Event &e, std::vector<std::string> &scoreDat
 }
 
 void GameManager::runEGBoard(SDL_Renderer* &renderer) {
-    SDL_Rect dsRect = {441 - 250, 248 - 150, 500, 300};
-    SDL_RenderCopy(renderer, egBoard, nullptr, &dsRect);
-    yesBut->renderButton(renderer);
-    noBut ->renderButton(renderer);
+    SDL_Rect egRect = {441 - 235, 248 - 175, 470, 350};
+    SDL_SetTextureAlphaMod(egBoard, 235);
+    SDL_RenderCopy(renderer, egBoard, nullptr, &egRect);
+    yesButOutLine->renderButOutLine(renderer, yesButOutLine->getButtonOutLine(), 3);
+    noButOutLine ->renderButOutLine(renderer, noButOutLine->getButtonOutLine(), 3);
     if (newRecord) {
-        SDL_RenderCopy(renderer, hsBoard, nullptr, &dsRect);
+        SDL_Rect hsRect = {441 - 250, 248 - 150, 500, 300};
+        SDL_RenderCopy(renderer, hsBoard, nullptr, &hsRect);
         static int caretTime = 0;
         SDL_Rect caret = {395 + playerName->getTextWidth(), 265, 2, 20};
         if (caretTime % 20 > 10) {

@@ -10,6 +10,7 @@
 class Button {
     private:
         SDL_Rect buttonRect;
+        SDL_Rect buttonOutLineRect;
         TextManager* normalText;
         TextManager* selectText;
         TextManager* selectTextDetail;
@@ -25,11 +26,19 @@ class Button {
         const SDL_Color selectColor = {250, 210, 0, 255};
         const SDL_Color detailColor = {247, 247, 247, 255};
 
+        Button();
+        
         Button(int Width, int Height, int scrPosX, int scrPosY);
+
+        void setButtonOutLine(int scrPosX, int scrPosY, int Width, int Height);
+
+        SDL_Rect getButtonOutLine ();
 
         void loadButton(SDL_Renderer* &renderer, std::string text = "");
 
         void renderButton(SDL_Renderer* &renderer);
+
+        void renderButOutLine(SDL_Renderer* &renderer, SDL_Rect buttonOutLineRect, int thickness);
 
         void setStatus(const int status);
 

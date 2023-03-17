@@ -15,6 +15,10 @@ Object::Object(int tileX, int tileY, int velX, int velY) {
     dead = false;
 }
 
+// bool Object::pacmanIsDead() const {
+//     return pacmanDead;
+// }
+
 bool Object::isDead() const {
     return dead;
 }
@@ -45,6 +49,10 @@ void Object::changeVelocityDir(int velX, int velY, int dir) {
     this->velY = velY;
     this->dir = dir;
 }
+
+// void Object::setPacmanDead(bool status) {
+//     pacmanDead = status;
+// }
 
 void Object::setDead(bool status, int id) {
     dead = status;
@@ -82,6 +90,6 @@ void Object::resetObjectTile(const int tileX, const int tileY) {
     this->tileY = tileY;
     dead = false;
     velX = velY = 0;
-    scrPosX = tileX * 16;
+    scrPosX = tileX * 16 + 8;
     scrPosY = tileY * 16;
 }

@@ -4,7 +4,8 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/include/SDL2"
+                "${workspaceFolder}/include/SDL2",
+                "${workspaceFolder}/include"
             ],
             "defines": [],
             "macFrameworkPath": [
@@ -13,8 +14,7 @@
             "compilerPath": "/usr/bin/clang",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "macos-clang-x64",
-            "configurationProvider": "ms-vscode.makefile-tools"
+            "intelliSenseMode": "macos-clang-x64"
         }
     ],
     "version": 4

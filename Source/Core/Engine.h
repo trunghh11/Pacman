@@ -33,6 +33,7 @@ class Engine {
         SDL_Texture* ready;
         bool runningEGBoard = false;
         bool eatGreenApple = false;
+        bool PacmanLostALife = false;
         int waitTime = 0;
     protected:
         void respawnObject();
@@ -93,6 +94,10 @@ class Engine {
         }
 
         void newGame();
+
+        void setPacmanLostALife(bool status);
+
+        bool getPacmanLostALife() const;
 
         void init(SDL_Renderer* &renderer);
 

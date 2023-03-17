@@ -8,6 +8,14 @@ using namespace std;
 typedef std::pair<int, int> II;
 typedef std::pair<int, std::pair<int, int> > IP;
 
+void Engine::setPacmanLostALife(bool status) {
+    PacmanLostALife = status;
+}
+
+bool Engine::getPacmanLostALife() const {
+    return PacmanLostALife;
+}
+
 void Engine::init(SDL_Renderer* &renderer) {
     /// initialize map
     map = new Map();
@@ -34,27 +42,56 @@ void Engine::init(SDL_Renderer* &renderer) {
 void Engine::newGame() {
     map->reset();
     gameManager->reset();
-    delete pacman;
-    pacman = new Pacman();
-    delete blinky;
-    if (gameManager->getLevel() < 5)
-        blinky = new Ghost(13, 11, false);
-    else
-        blinky = new Ghost(12, 11, false);
-    delete pinky;
-    pinky  = new Ghost(13, 14, true);
-    delete inky;
-    inky   = new Ghost(11, 14, true);
-    delete clyde;
-    clyde  = new Ghost(15, 14, true);
+    // delete pacman;
+    // pacman = new Pacman();
+    // delete blinky;
+    // if (gameManager->getLevel() < 5)
+    //     blinky = new Ghost(13, 11, false);
+    // else
+    //     blinky = new Ghost(12, 11, false);
+    // delete pinky;
+    // pinky  = new Ghost(13, 14, true);
+    // delete inky;
+    // inky   = new Ghost(11, 14, true);
+    // delete clyde;
+    // clyde  = new Ghost(15, 14, true);
+    // if (gameManager->getLevel() >= 3) {
+    //     apple->spawnAt(1, 1);
+    //     delete greendy;
+    //     greendy = new Ghost(12, 15, true);
+    // }
+    // if (gameManager->getLevel() >= 5) {
+    //     delete friendy;
+    //     friendy = new Ghost(14, 11, false);
+    // }
+    if (pacman == nullptr) pacman = new Pacman();
+    else pacman->respawn();
+    if (gameManager->getLevel() < 5) {
+        if (blinky == nullptr) blinky = new Ghost(13, 11, false);
+        else blinky->respawn(13,11,false);
+    }
+    else {
+        if (blinky == nullptr) blinky = new Ghost(12, 11, false);
+        else blinky->respawn(12,11,false);
+    }
+    
+    if (pinky == nullptr) pinky = new Ghost(13, 14, true);
+    else pinky->respawn(13,14,true);
+
+    if (inky == nullptr) inky = new Ghost(11, 14, true);
+    else inky->respawn(11,14,true);
+
+    if (clyde == nullptr) clyde = new Ghost(15, 14, true);
+    else clyde->respawn(15,14,true);
+
     if (gameManager->getLevel() >= 3) {
         apple->spawnAt(1, 1);
-        delete greendy;
-        greendy = new Ghost(12, 15, true);
+        if (greendy == nullptr) greendy = new Ghost(12, 15, true);
+        else greendy->respawn(12,15,true);
     }
     if (gameManager->getLevel() >= 5) {
-        delete friendy;
-        friendy = new Ghost(14, 11, false);
+        if (friendy == nullptr) friendy = new Ghost(14, 11, false);
+        else friendy->respawn(14,11,false);
     }
     soundManager->insertPlayList(SoundManager::START);
     tickManager->resetTick(gameManager->getLevel());
@@ -63,24 +100,16 @@ void Engine::newGame() {
 }
 
 void Engine::respawnObject() {
-    delete pacman;
-    pacman = new Pacman();
-    //pacman->respawn();
-    delete blinky;
-    blinky = new Ghost(13, 11, false);
-    delete pinky;
-    pinky  = new Ghost(13, 14, true);
-    delete inky;
-    inky   = new Ghost(11, 14, true);
-    delete clyde;
-    clyde  = new Ghost(15, 14, true);
+    pacman->respawn();
+    blinky->respawn(13, 11, false);
+    pinky ->respawn(13, 14, true);
+    inky ->respawn(11, 14, true);
+    clyde->respawn(15, 14, true);
     if (greendy != nullptr) {
-        delete greendy;
-        greendy = new Ghost(12, 15, true);
+        greendy->respawn(12, 15, true);
     }
     if (friendy != nullptr) {
-        delete friendy;
-        friendy = new Ghost(14, 11, false);
+        friendy->respawn(14, 11, false);
     }
     soundManager->reset();
     tickManager->pauseTick(false);
@@ -178,8 +207,11 @@ void Engine::render(SDL_Renderer* &renderer, const std::vector<std::string> &sco
             }
         }
         if (pacman->isDead()) {
+            PacmanLostALife = true;
             if (objectTexture->pacmanIsDead()) {
-                if (gameManager->getRemainLife() > 0) respawnObject();
+                if (gameManager->getRemainLife() > 0) {
+                    respawnObject();
+                } 
                 else {
                     runningEGBoard = true;
                     gameManager->checkScoreData(scoreData);
@@ -187,7 +219,10 @@ void Engine::render(SDL_Renderer* &renderer, const std::vector<std::string> &sco
             }
             else objectTexture->renderPacmanTexture(renderer, pacman->getPosX(), pacman->getPosY(), TextureSrc::DEAD_PACMAN);
         }
-        else objectTexture->renderPacmanTexture(renderer, pacman->getPosX(), pacman->getPosY(), dir);
+        else {
+            objectTexture->renderPacmanTexture(renderer, pacman->getPosX(), pacman->getPosY(), dir);
+            PacmanLostALife = false;
+        }
         if (waitTime > 0) {
             dsRect = {441 - 97, 248 - 52, 194, 104};
             SDL_RenderCopy(renderer, nextLevel, nullptr, &dsRect);

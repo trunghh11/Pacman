@@ -30,6 +30,8 @@ class Object {
 
         void move();
 
+        // bool pacmanIsDead() const ;
+
         bool isDead() const;
 
         int getPosX() const;
@@ -43,6 +45,8 @@ class Object {
         void reTilePos();
 
         void changeVelocityDir(int velX, int velY, int dir);
+
+        // void setPacmanDead(bool status);
 
         void setDead(bool status, int id = 0);
 

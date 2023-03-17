@@ -1,5 +1,7 @@
 #include "../Source/Core/Window.h"
 #include "../Source/Manager/LogStatus.h"
+#include "../Source/Core/PlayStateManager.h"
+// #include "../Source/Manager/GameManager.h"
 #include <math.h>
 
 Window::Window() {
@@ -100,21 +102,30 @@ void Window::runGame() {
                     startMenu->handleEvent(e, renderer);
                     switch (startMenu->getStatus()) {
                         case Menu::PLAY_BUTTON_PRESSED:
-                            runningMenu = false; break;
+                            runningMenu = false;
+                            // std::cout << "pressed" << std::endl;
+                            break;
                         case Menu::EXIT_BUTTON_PRESSED:
                             Running = false; break;
                     }
                 }
                 else {
                     playState->handleEvent(e, renderer, runningMenu, highScore);
-                    if (runningMenu) startMenu->reOpen();
+                    if (runningMenu) {
+                        startMenu->reOpen();
+                        startGame = false;
+                    } 
                 }
             }
         }
         if (!runningMenu) {
+            // if (startMenu->getStatus() == Menu::PLAY_BUTTON_PRESSED) {
+            //     playState->newGame(renderer);
+            // }
             if (!startGame) {
                 playState->newGame(renderer);
                 startGame = true;
+                
             }
             playState->runGame(runningMenu);
             if (runningMenu) startMenu->reOpen(), startGame = false;

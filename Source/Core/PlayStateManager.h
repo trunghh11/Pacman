@@ -6,9 +6,10 @@
 #include <string>
 #include <vector>
 #include "Engine.h"
-#include "SDL_mixer.h"
+#include <SDL_mixer.h>
 #include "../Menu/Button.h"
 #include "../Menu/Menu.h"
+#include "../Object/Object.h"
 
 class PlayStateManager {
     private:

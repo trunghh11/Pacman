@@ -3,7 +3,7 @@
 #include <iostream>
 
 Ghost::Ghost(int tileX, int tileY, bool inCage) : Object(tileX, tileY) {
-    frighten = 0;
+    frighten = false;
     accele = 1;
     ghostVelocity = 2;
     scattering = false;
@@ -82,7 +82,12 @@ void Ghost::moving() {
 
 void Ghost::respawn(const int tileX, const int tileY, const bool inCage) {
     resetObjectTile(tileX, tileY);
+    frighten = false;
+    accele = 1;
+    ghostVelocity = 2;
+    scattering = false;
     this->inCage = inCage;
+    nextTileX = tileX, nextTileY = tileY;
     if (inCage == false) {
         if (rand() % 2 == 0) ghostDir = LEFT;
         else ghostDir = RIGHT;
