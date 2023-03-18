@@ -179,7 +179,7 @@ void GameManager::handleEGBoard(SDL_Event &e, std::vector<std::string> &scoreDat
             }
         }
         else if (e.type == SDL_TEXTINPUT) {
-            if( !( SDL_GetModState() & KMOD_CTRL && ( e.text.text[ 0 ] == 'c' || e.text.text[ 0 ] == 'C' || e.text.text[ 0 ] == 'v' || e.text.text[ 0 ] == 'V' ) ) && playername.length() < 22)
+            if( !( SDL_GetModState() & KMOD_CTRL && ( e.text.text[ 0 ] == 'c' || e.text.text[ 0 ] == 'C' || e.text.text[ 0 ] == 'v' || e.text.text[ 0 ] == 'V' ) ) && playername.length() < 25)
                 if ((e.text.text[0] >= 'a' && e.text.text[0] <= 'z') || (e.text.text[0] >= 'A' && e.text.text[0] <= 'Z') || (e.text.text[0] >= '0' && e.text.text[0] <= '9') || e.text.text[0] == ' ')
                     playername += e.text.text;
         }
@@ -215,25 +215,26 @@ void GameManager::runEGBoard(SDL_Renderer* &renderer) {
     yesButOutLine->renderButOutLine(renderer, yesButOutLine->getButtonOutLine(), 3);
     noButOutLine ->renderButOutLine(renderer, noButOutLine->getButtonOutLine(), 3);
     if (newRecord) {
-        SDL_Rect hsRect = {441 - 250, 248 - 150, 500, 300};
+        SDL_Rect hsRect = {441 - 300, 248 - 180, 600, 360};
         SDL_RenderCopy(renderer, hsBoard, nullptr, &hsRect);
         static int caretTime = 0;
-        SDL_Rect caret = {395 + playerName->getTextWidth(), 265, 2, 20};
-        if (caretTime % 20 > 10) {
+        SDL_Rect caret = {200 + playerName->getTextWidth(), 283, 2, 20};
+        if (caretTime % 30 > 15) {
+            SDL_SetRenderDrawColor(renderer, 0,0,0,255);
             SDL_RenderFillRect(renderer, &caret);
         }
         ++caretTime;
         caretTime %= 30;
         if (playername != "") {
             playerName->loadRenderText(renderer, playername.c_str(), {0, 0, 0, 255});
-            playerName->renderText(renderer, 395, 268, TextManager::LEFT);
+            playerName->renderText(renderer, 200, 284, TextManager::LEFT);
         }
     }
 }
 
 void GameManager::checkScoreData(const std::vector<std::string> &scoreData) {
     if (scoreData.size()) {
-        for (int i = 0; i < scoreData.size(); ++i) {
+        for (int i = 0; i < scoreData.size(); i++) {
             int t = 0;
             int j = 0;
             while (j < scoreData[i].length() && scoreData[i][j] != ':') ++j;
@@ -248,7 +249,7 @@ void GameManager::checkScoreData(const std::vector<std::string> &scoreData) {
             else if (i == scoreData.size() -1 && scoreData.size() < 10) {
                 newRecord = true;
                 SDL_StartTextInput();
-                pos = i;
+                pos = i+1;
                 break;
             }
         }

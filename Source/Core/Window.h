@@ -26,7 +26,7 @@ class Window {
         static const int SCREEN_WIDTH = 882;
         static const int SCREEN_HEIGHT = 496;
         const std::string WINDOW_TITTLE = "Pacman";
-        std::vector<std::string> startMenuButtonText = {"New Game", "How to Play", "High Scores", "Sound: ON", "Exit"};
+        std::vector<std::string> startMenuButtonText = {"New Game", "How to Play", "High Scores", "Sound: ON", "Quit Game"};
 
         Window();
 

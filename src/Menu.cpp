@@ -4,12 +4,17 @@
 
 Menu::Menu(const int baseScrPosX, const int baseScrPosY, const int totalButton, const int buttonWidth, const int buttonHeight) {
     menuTexture  = nullptr;
+    buttonTexture = nullptr;
     for (int i = 0; i < 3; ++i)
         howToPlayTexture[i] = nullptr;
     highScoreTexture = nullptr;
     arrowTexture = nullptr;
+    noHighText = nullptr;
     scoreText = nullptr;
+    orderText = nullptr;
+    playerText = nullptr;
     arrowHSPos = 0;
+    sizeHS = 0;
     TOTAL_BUTTON = totalButton;
     MENU_BUTTON_WIDTH  = buttonWidth;
     MENU_BUTTON_HEIGHT = buttonHeight;
@@ -50,6 +55,7 @@ void Menu::init(SDL_Renderer* &renderer, const std::string imgPath, std::vector<
     if (Image == nullptr)
         console->Status( IMG_GetError() );
     else {
+        buttonTexture = buttonImage->loadButtonImage(renderer,"Source/Assets/Menu_Image/button_menu.png" );
         menuTexture = SDL_CreateTextureFromSurface(renderer, Image);
         SDL_FreeSurface(Image);
         howToPlayTexture[0] = loadImage(renderer, "Source/Assets/Menu_Image/How to Play1.png");
@@ -59,7 +65,10 @@ void Menu::init(SDL_Renderer* &renderer, const std::string imgPath, std::vector<
         highScoreTexture = loadImage(renderer, "Source/Assets/Menu_Image/High Scores.png");
         arrowTexture = loadImage(renderer, "Source/Assets/Menu_Image/arrow-upanddown.png");
 
+        playerText = new TextManager(28);
         scoreText = new TextManager(28);
+        orderText = new TextManager(28);
+        noHighText = new TextManager(36);
 
         for (int i = 0; i < TOTAL_BUTTON; ++i)
             menuButton.push_back(new Button(MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, baseScrPosX - MENU_BUTTON_WIDTH / 2, baseScrPosY + (5 + MENU_BUTTON_HEIGHT) * (i - 1)));
@@ -95,23 +104,35 @@ void Menu::render(SDL_Renderer* &renderer, const std::vector<std::string> &score
         SDL_RenderCopy(renderer, arrowTexture, &srcUP, &dstUP);
         SDL_RenderCopy(renderer, arrowTexture, &srcDOWN, &dstDOWN);
         if (scoreData.size() == 0) {
-            scoreText->loadRenderText(renderer, "NO HIGH SCORE YET!", {0, 0, 0, 255});
-            scoreText->renderText(renderer, 441, 240, TextManager::CENTER);
+            noHighText->loadRenderText(renderer, "NO HIGH SCORE YET !", {0, 0, 0, 255});
+            noHighText->renderText(renderer, 350, 200, TextManager::CENTER);
         }
         else {
             for (int i = arrowHSPos; i < fmin(arrowHSPos + 7,scoreData.size()) ; ++i) {
                 int j = i;
-                std::string s = std::to_string(j+1) + "\t" + scoreData[i];
-                scoreText->loadRenderText(renderer, s, {0, 0, 0, 255});
-                scoreText->renderText(renderer, 345, 90 + 40 * (i - arrowHSPos), TextManager::CENTER);
-                
+                sizeHS = scoreData.size() - arrowHSPos;
+                int posScore = scoreData[i].find(':');
+                std::string order = std::to_string(j+1); //số thứ tự
+                std::string playerName = scoreData[i].substr(0,posScore); // tên
+                std::string score = scoreData[i].substr(posScore+1,scoreData[i].size() - posScore); //điểm
+
+                orderText->loadRenderText(renderer, order, {0, 0, 0, 255});
+                orderText->renderText(renderer, 60, 80 + 40 * (i - arrowHSPos), TextManager::LEFT);
+
+                playerText->loadRenderText(renderer, playerName, {0, 0, 0, 255});
+                playerText->renderText(renderer, 345, 95 + 40 * (i - arrowHSPos), TextManager::CENTER);
+
+                scoreText->loadRenderText(renderer,score, {0, 0, 0, 255});
+                scoreText->renderText(renderer, 565, 80 + 40 * (i - arrowHSPos), TextManager::LEFT);
+
+
             }
         }
     }
     else {
         SDL_RenderCopy(renderer, menuTexture, nullptr, nullptr);
         for (int i = 0; i < TOTAL_BUTTON; ++i)
-            menuButton[i]->renderButton(renderer);
+            menuButton[i]->renderButton(renderer, buttonTexture);
     }
 }
 
@@ -120,7 +141,7 @@ void Menu::handleEvent(SDL_Event &e, SDL_Renderer* &renderer) {
         if (e.key.keysym.sym == SDLK_DOWN || e.key.keysym.sym == SDLK_s) {
             Mix_PlayChannel(7, navigationSound, 0);
             if (currentMenuStatus == HIGH_SCORES) {
-                if (arrowHSPos < 3) ++arrowHSPos;
+                if (arrowHSPos < 3 && sizeHS > 7) ++arrowHSPos;
             }
             else {
                 menuButton[currentButtonID]->setStatus(Button::BUTTON_OUT);
@@ -166,8 +187,8 @@ void Menu::handleEvent(SDL_Event &e, SDL_Renderer* &renderer) {
                 std::string menuText = menuButton[currentButtonID]->getText();
                 if (menuText == "New Game") currentMenuStatus = PLAY_BUTTON_PRESSED;
                 else if (menuText == "Resume") currentMenuStatus = RESUME;
-                else if (menuText == "Exit") currentMenuStatus = EXIT_BUTTON_PRESSED;
-                else if (menuText == "Exit to Start Menu") currentMenuStatus = EXIT_BUTTON_PRESSED;
+                else if (menuText == "Quit Game") currentMenuStatus = EXIT_BUTTON_PRESSED;
+                else if (menuText == "Back to Menu") currentMenuStatus = EXIT_BUTTON_PRESSED;
                 else if (menuText == "Sound: ON") {
                     menuButton[currentButtonID]->changeSoundButton(renderer);
                     Mix_Volume(-1, 0);

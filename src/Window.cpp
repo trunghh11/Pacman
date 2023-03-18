@@ -84,7 +84,7 @@ void Window::quitSDL() {
 }
 
 void Window::runGame() {
-    startMenu = new Menu(236, 86, startMenuButtonText.size(), 210, 30);
+    startMenu = new Menu(236, 85, startMenuButtonText.size(), 220, 30);
     startMenu->init(renderer, "Source/Assets/Menu_Image/Pacman_Start_Menu.png", startMenuButtonText);
     startMenu->changeRunStatus();
 

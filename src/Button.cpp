@@ -5,8 +5,15 @@ Button::Button(){}
 Button::Button(int Width, int Height, int scrPosX, int scrPosY) {
     buttonRect = {scrPosX, scrPosY, Width, Height};
     normalText = new TextManager(24);
-    selectText = new TextManager(26);
+    selectText = new TextManager(25);
     selectTextDetail = new TextManager(18);
+}
+
+SDL_Texture* Button::loadButtonImage(SDL_Renderer* &renderer, const std::string imgPath) {
+    SDL_Surface* Image = IMG_Load(imgPath.c_str());
+    SDL_Texture* buttonTexture = SDL_CreateTextureFromSurface(renderer, Image);
+    SDL_FreeSurface(Image);
+    return buttonTexture;
 }
 
 void Button::setButtonOutLine(int scrPosX, int scrPosY, int Width, int Height) {
@@ -27,8 +34,8 @@ void Button::loadButton(SDL_Renderer* &renderer, std::string text) {
     else if (text == "How to Play") bDetail = "Press Enter for instructions on how to play.";
     else if (text == "High Scores") bDetail = "Press Enter for High score.";
     else if (text == "Sound: ON") bDetail = "Press Enter to change sound status.";
-    else if (text == "Exit") bDetail = "Press Enter to quit the game.";
-    else if (text == "Exit to Start Menu") bDetail = "Press Enter to return to the Start Menu.";
+    else if (text == "Quit Game") bDetail = "Press Enter to quit the game.";
+    else if (text == "Back to Menu") bDetail = "Press Enter to return to the Start Menu.";
     else bDetail = "";
 
     if (bDetail != "") selectTextDetail->loadRenderText(renderer, bDetail, detailColor);
@@ -38,10 +45,9 @@ void Button::loadButton(SDL_Renderer* &renderer, std::string text) {
     }
 }
 
-void Button::renderButton(SDL_Renderer* &renderer) {
+void Button::renderButton(SDL_Renderer* &renderer, SDL_Texture* buttonTexture) {       
     if (buttonStatus == BUTTON_IN) {
-        SDL_SetRenderDrawColor(renderer, 184, 68, 229, 255);
-        SDL_RenderFillRect(renderer, &buttonRect);
+        SDL_RenderCopy(renderer, buttonTexture, NULL, &buttonRect);
 
         SDL_SetRenderDrawColor(renderer, selectColor.r, selectColor.g, selectColor.b, selectColor.a);
         selectText->renderText(renderer, buttonRect.x + buttonRect.w / 2, buttonRect.y + buttonRect.h / 2, TextManager::CENTER);

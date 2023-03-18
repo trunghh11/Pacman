@@ -15,6 +15,7 @@ class Menu {
     private:
         int alphaMod = 1; //đại diện cho độ trong suốt của menu.
         int arrowHSPos; // đại diện cho vị trí của mũi tên trong bảng xếp hạng cao nhất.
+        int sizeHS; // đại diện cho size của mảng điểm cao
         int currentButtonID; //đại diện cho ID của button đang được chọn.
         int currentMenuStatus;//đại diện cho trạng thái của menu.
         int currentHTPid;//đại diện cho ID của trang hướng dẫn chơi hiện tại.
@@ -25,7 +26,10 @@ class Menu {
         int baseScrPosX;//đại diện cho tọa độ x của menu.
         int baseScrPosY;//đại diện cho tọa độ y của menu.
 
+        TextManager* noHighText = nullptr;
+        TextManager* playerText = nullptr;//đại diện cho text được sử dụng để hiển thị tên người chơi.
         TextManager* scoreText = nullptr;//đại diện cho text được sử dụng để hiển thị điểm số cao nhất.
+        TextManager* orderText = nullptr; //đại diện cho text được sử dụng để hiển thị số thứ tự
         Mix_Chunk* navigationSound = Mix_LoadWAV("Source/Assets/Sound/navigationButton.wav");//đại diện cho âm thanh được phát khi điều hướng qua các button.
         Mix_Chunk* selectionSound = Mix_LoadWAV("Source/Assets/Sound/selectButton.wav");//đại diện cho âm thanh được phát khi chọn một button.
         SDL_Texture* menuTexture;//đại diện cho hình ảnh của menu.
@@ -33,7 +37,8 @@ class Menu {
         SDL_Texture* highScoreTexture; //đại diện cho hình ảnh bảng xếp hạng điểm số cao nhất.
         SDL_Texture* arrowTexture;//đại diện cho hình ảnh mũi tên trong bảng xếp hạng cao nhất.
         std::vector<Button* > menuButton; //một vector chứa các con trỏ tới Button, đại diện cho các button trong menu.
-
+        Button* buttonImage;
+        SDL_Texture* buttonTexture;
         LogStatus* console = new LogStatus("Menu"); //một con trỏ tới LogStatus, đại diện cho trạng thái log của menu.
         bool running = false; //một boolean đại diện cho trạng thái của menu.
 

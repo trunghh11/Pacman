@@ -4,6 +4,7 @@
 #define _BUTTON_H_
 
 #include <SDL.h>
+#include <SDL_image.h>
 #include <string>
 #include "../Manager/TextManager.h"
 
@@ -23,7 +24,7 @@ class Button {
         static const int BUTTON_PRESSED = 2;
         static const int MENU_FONT_SIZE = 28;
         const SDL_Color normalColor = {0, 0, 0, 255};
-        const SDL_Color selectColor = {250, 210, 0, 255};
+        const SDL_Color selectColor = {255, 255, 255, 255};
         const SDL_Color detailColor = {247, 247, 247, 255};
 
         Button();
@@ -36,7 +37,9 @@ class Button {
 
         void loadButton(SDL_Renderer* &renderer, std::string text = "");
 
-        void renderButton(SDL_Renderer* &renderer);
+        SDL_Texture* loadButtonImage(SDL_Renderer* &renderer, const std::string imgPath);
+
+        void renderButton(SDL_Renderer* &renderer,SDL_Texture* buttonTexture);
 
         void renderButOutLine(SDL_Renderer* &renderer, SDL_Rect buttonOutLineRect, int thickness);
 

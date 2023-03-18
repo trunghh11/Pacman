@@ -8,7 +8,7 @@ using namespace std;
 
 PlayStateManager::PlayStateManager() {
     engine = new Engine();
-    pauseMenu = new Menu(236, 86, pauseMenuButtonText.size(), 210, 30);
+    pauseMenu = new Menu(236, 85, pauseMenuButtonText.size(), 220, 30);
     runPauseMenu = false;
 }
 
