@@ -36,6 +36,7 @@ void TextureSrc::loadTileTexture(SDL_Renderer* &renderer) {
     }
     else {
         tileTexture = SDL_CreateTextureFromSurface(renderer, Image);
+        
 
         int x = 0, y = 0;
         for (int i = 0; i < 32; ++i) {
@@ -52,7 +53,18 @@ void TextureSrc::loadTileTexture(SDL_Renderer* &renderer) {
 }
 
 void TextureSrc::renderTileTexture(SDL_Renderer* &renderer, int tileID, SDL_Rect* dsRect) {
+    static int i = 1;
+    if (i == 100000) {
+        SDL_SetTextureColorMod(tileTexture, 255,0 , 0);
+    }
+    if (i == 200000) {
+        SDL_SetTextureColorMod(tileTexture, 0,255 , 0);
+    }
+
+    if (i > 200000) SDL_SetTextureColorMod(tileTexture, 255,255 , 255);
+    
     SDL_RenderCopy(renderer, tileTexture, &tileSprite[ tileID ], dsRect);
+    i++;
 }
 
 void TextureSrc::loadPacmanAndGhostTexture(SDL_Renderer* &renderer) {

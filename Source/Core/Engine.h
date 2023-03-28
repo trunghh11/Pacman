@@ -51,9 +51,6 @@ class Engine {
             pinky  = nullptr;
             clyde  = nullptr;
             inky   = nullptr;
-            greendy = nullptr;
-            friendy = nullptr;
-            apple = nullptr;
             objectTexture = nullptr;
             tickManager   = nullptr;
             gameManager   = nullptr;
