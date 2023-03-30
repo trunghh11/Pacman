@@ -10,13 +10,37 @@ PlayStateManager::PlayStateManager() {
     engine = new Engine();
     pauseMenu = new Menu(236, 85, pauseMenuButtonText.size(), 220, 30);
     runPauseMenu = false;
+    runningCharacterMenu = false;
+    characterMenu = new Menu;
 }
 
 PlayStateManager::~PlayStateManager() {
     delete engine;
     engine = nullptr;
-
+    runningCharacterMenu = false;
     runPauseMenu = false;
+}
+
+bool PlayStateManager::isRunningCharacter() {
+    return runningCharacterMenu;
+}
+
+void PlayStateManager::setRunningCharacter(bool status) {
+    runningCharacterMenu = status;
+}
+
+void PlayStateManager::initCharacter(SDL_Renderer* &renderer, const std::string imgPath){
+    characterMenu ->initCharacterMenu(renderer,imgPath.c_str());
+}
+
+
+void PlayStateManager::runCharacterMenu(SDL_Renderer* &renderer, SDL_Event &e ){
+    characterMenu->handleEventCharacter(e);
+    if (characterMenu->getSelectCharacter() != 0) runningCharacterMenu = false;
+}
+
+void PlayStateManager::renderCharacter(SDL_Renderer* &renderer ){
+    characterMenu->renderCharacterMenu(renderer);
 }
 
 void PlayStateManager::newGame(SDL_Renderer* &renderer) {
@@ -34,6 +58,7 @@ void PlayStateManager::newGame(SDL_Renderer* &renderer) {
 }
 
 void PlayStateManager::runGame(bool &exitToMenu) {
+    
     if (runPauseMenu == false) engine->loop(exitToMenu);
 }
 
@@ -62,7 +87,7 @@ void PlayStateManager::handleEvent(SDL_Event& e, SDL_Renderer* &renderer, bool &
                     break;
                 case Menu::PLAY_BUTTON_PRESSED:
                     runPauseMenu = false;
-                    engine->newGame();
+                    engine->newGame(); 
                     break;
                 case Menu::EXIT_BUTTON_PRESSED:
                     exitToMainMenu = true;
@@ -70,7 +95,7 @@ void PlayStateManager::handleEvent(SDL_Event& e, SDL_Renderer* &renderer, bool &
                     break;
             }
         }
-        else engine->handleEvent(e, scoreData);
+        else if (!runningCharacterMenu) engine->handleEvent(e, scoreData);
     }
 }
 

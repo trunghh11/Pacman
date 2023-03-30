@@ -9,7 +9,9 @@ Window::Window() {
     renderer = nullptr;
     playState = nullptr;
     startMenu = nullptr;
+    // characterMenu = nullptr;
     runningMenu = false;
+    // runningCharacterMenu = false;
 }
 
 Window::~Window() {
@@ -92,6 +94,9 @@ void Window::runGame() {
     runningMenu = true;
     bool startGame = false;
     playState = new PlayStateManager();
+    playState ->initCharacter(renderer, "Source/Assets/Menu_Image/character_menu.png");
+    playState->setRunningCharacter(false);
+
 
     while (Running) {
 
@@ -103,40 +108,52 @@ void Window::runGame() {
                     switch (startMenu->getStatus()) {
                         case Menu::PLAY_BUTTON_PRESSED:
                             runningMenu = false;
+                            playState->setRunningCharacter(true);
+                            // std::cout << playState->runningCharacterMenu << std::endl;
                             // std::cout << "pressed" << std::endl;
                             break;
                         case Menu::EXIT_BUTTON_PRESSED:
                             Running = false; break;
                     }
                 }
-                else {
+                else if (playState->isRunningCharacter()) {
+                    playState->runCharacterMenu(renderer, e);
+                }
+                else if (playState->isRunningCharacter() == false && runningMenu == false ){
+                    
                     playState->handleEvent(e, renderer, runningMenu, highScore);
                     if (runningMenu) {
                         startMenu->reOpen();
+                        playState->setRunningCharacter(false);
                         startGame = false;
+
                     } 
                 }
             }
         }
+
         if (!runningMenu) {
             // if (startMenu->getStatus() == Menu::PLAY_BUTTON_PRESSED) {
             //     playState->newGame(renderer);
             // }
-            if (!startGame) {
-                playState->newGame(renderer);
+            if (playState->isRunningCharacter() == false && startGame == false) {
+                playState -> newGame(renderer);
                 startGame = true;
-                
             }
-            playState->runGame(runningMenu);
-            if (runningMenu) startMenu->reOpen(), startGame = false;
+            if (!playState->isRunningCharacter() ) {
+                playState->runGame(runningMenu);
+                if (runningMenu) startMenu->reOpen(),  playState->setRunningCharacter(false), startGame = false;
+            }
         }
-
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
+
         if (runningMenu)
             startMenu->render(renderer, highScore);
-        else playState->render(renderer, highScore);
+        else if (playState->isRunningCharacter())
+            playState->renderCharacter(renderer);
+        else if (!playState->isRunningCharacter()) playState->render(renderer, highScore);
 
         SDL_RenderPresent(renderer);
     }

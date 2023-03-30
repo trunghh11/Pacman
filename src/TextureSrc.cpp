@@ -29,7 +29,7 @@ bool TextureSrc::pacmanIsDead() {
 }
 
 void TextureSrc::loadTileTexture(SDL_Renderer* &renderer) {
-    SDL_Surface* Image = IMG_Load("Source/Assets/Entity Image/Pacman Tile Labyrinth.png");
+    SDL_Surface* Image = IMG_Load("Source/Assets/Entity Image/Pacman Tile Labyrinth-pink.png");
 
     if (Image == nullptr) {
         Console->Status( IMG_GetError() );
@@ -53,22 +53,13 @@ void TextureSrc::loadTileTexture(SDL_Renderer* &renderer) {
 }
 
 void TextureSrc::renderTileTexture(SDL_Renderer* &renderer, int tileID, SDL_Rect* dsRect) {
-    static int i = 1;
-    if (i == 100000) {
-        SDL_SetTextureColorMod(tileTexture, 255,0 , 0);
-    }
-    if (i == 200000) {
-        SDL_SetTextureColorMod(tileTexture, 0,255 , 0);
-    }
 
-    if (i > 200000) SDL_SetTextureColorMod(tileTexture, 255,255 , 255);
-    
     SDL_RenderCopy(renderer, tileTexture, &tileSprite[ tileID ], dsRect);
-    i++;
+
 }
 
 void TextureSrc::loadPacmanAndGhostTexture(SDL_Renderer* &renderer) {
-    SDL_Surface* Image = IMG_Load("Source/Assets/Entity Image/Pacman and Ghost Texture.png");
+    SDL_Surface* Image = IMG_Load("Source/Assets/Entity Image/MsPacman and Ghost Texture.png");
 
     if (Image == nullptr) {
         Console->Status( IMG_GetError() );
@@ -139,7 +130,7 @@ void TextureSrc::renderPacmanTexture(SDL_Renderer* &renderer, int posX, int posY
     if (status != DEAD_PACMAN && pacmanFrame == 30) pacmanFrame = 0;
 
     switch (status) {
-        case -1: srcRect = pacmanUP[0]; break;
+        case -1: srcRect = pacmanRIGHT[0]; break;
         case UP:    srcRect = pacmanUP   [ pacmanFrame / 10 ]; break;
         case RIGHT: srcRect = pacmanRIGHT[ pacmanFrame / 10 ]; break;
         case DOWN:  srcRect = pacmanDOWN [ pacmanFrame / 10 ]; break;

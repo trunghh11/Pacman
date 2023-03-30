@@ -17,6 +17,8 @@ class Menu {
         int arrowHSPos; // đại diện cho vị trí của mũi tên trong bảng xếp hạng cao nhất.
         int sizeHS; // đại diện cho size của mảng điểm cao
         int currentButtonID; //đại diện cho ID của button đang được chọn.
+        int currentCharacter;
+        int selectCharacter;
         int currentMenuStatus;//đại diện cho trạng thái của menu.
         int currentHTPid;//đại diện cho ID của trang hướng dẫn chơi hiện tại.
 
@@ -38,7 +40,12 @@ class Menu {
         SDL_Texture* arrowTexture;//đại diện cho hình ảnh mũi tên trong bảng xếp hạng cao nhất.
         std::vector<Button* > menuButton; //một vector chứa các con trỏ tới Button, đại diện cho các button trong menu.
         Button* buttonImage;
+        Button* characterButton;
+        Button* pacmanButton;
+        Button* msPacmanButton;
         SDL_Texture* buttonTexture;
+        SDL_Texture* menuCharacterTexture;
+        SDL_Texture* characterButtonTexture;
         LogStatus* console = new LogStatus("Menu"); //một con trỏ tới LogStatus, đại diện cho trạng thái log của menu.
         bool running = false; //một boolean đại diện cho trạng thái của menu.
 
@@ -52,6 +59,10 @@ class Menu {
         static const int HIGH_SCORES = 5; //đại diện cho trạng thái menu khi nút "High Scores" được nhấn.
         static const bool ON = true; //đại diện cho trạng thái bật của âm thanh.
         static const bool OFF = false; //đại diện cho trạng thái tắt của âm thanh.
+        static const int PAC_MAN = 1; //đại diện cho trạng thái menu khi nút "How to Play" được nhấn.
+        static const int MS_PAC_MAN = 2; //đại diện cho trạng thái menu khi nút "How to Play" được nhấn.
+        // static const int CHARACTER_SELECTED = 3; //đại diện cho trạng thái menu khi nút "How to Play" được nhấn.
+        
 
 
         /* 
@@ -65,7 +76,7 @@ class Menu {
         */
         Menu(const int baseScrPosX, const int baseScrPosY, const int totalButton, const int buttonWidth, const int buttonHeight);
 
-
+        Menu();
         /*Hàm ~Menu() là hàm hủy đối tượng Menu, được sử dụng để giải phóng bộ nhớ đã được cấp phát cho các biến member của lớp.*/
         ~Menu();
 
@@ -79,7 +90,14 @@ class Menu {
         */
         void init(SDL_Renderer* &renderer, const std::string imgPath, std::vector<std::string> &buttonText);
 
+        void initCharacterMenu(SDL_Renderer* &renderer, const std::string imgPath);
+
         void render(SDL_Renderer* &renderer, const std::vector<std::string> &scoreData);
+
+        void renderCharacterMenu(SDL_Renderer* &renderer);
+
+        void handleEventCharacter(SDL_Event &e);
+
         /*
         được sử dụng để hiển thị các phần tử của menu lên màn hình. 
         Đầu vào của hàm là tham chiếu đến đối tượng renderer SDL_Renderer để vẽ hình ảnh trên màn hình.
@@ -89,6 +107,10 @@ class Menu {
         void handleEvent(SDL_Event &e, SDL_Renderer* &renderer);
 
         bool isRunning() const;
+
+        void resetSelectCharacter(int reset);
+
+        int getSelectCharacter() const;
 
         int getStatus() const;
 

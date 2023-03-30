@@ -2,6 +2,14 @@
 #include <stdio.h>
 #include <math.h>
 
+Menu::Menu() {
+    menuCharacterTexture = nullptr;
+    characterButtonTexture = nullptr;
+    msPacmanButton = nullptr;
+    pacmanButton = nullptr;
+    characterButton = nullptr;
+    selectCharacter = 0;
+}
 Menu::Menu(const int baseScrPosX, const int baseScrPosY, const int totalButton, const int buttonWidth, const int buttonHeight) {
     menuTexture  = nullptr;
     buttonTexture = nullptr;
@@ -85,6 +93,62 @@ void Menu::init(SDL_Renderer* &renderer, const std::string imgPath, std::vector<
         currentMenuStatus = RUNNING;
     }
 }
+
+void Menu::initCharacterMenu(SDL_Renderer* &renderer, const std::string imgPath){
+    SDL_Surface* Image = nullptr;
+    Image = IMG_Load(imgPath.c_str());
+    if (Image == nullptr )
+        console->Status( IMG_GetError() );
+    else {
+        characterButtonTexture = characterButton->loadButtonImage(renderer,"Source/Assets/Menu_Image/choose_character_button.png" );
+        menuCharacterTexture = SDL_CreateTextureFromSurface(renderer,Image);
+        SDL_FreeSurface(Image);
+        pacmanButton = new Button(28,31,310,263);
+        msPacmanButton = new Button(28,31,186,400);
+        pacmanButton ->loadButton(renderer);
+        msPacmanButton ->loadButton(renderer);
+        pacmanButton ->setStatus(Button::BUTTON_IN);
+        msPacmanButton->setStatus(Button::BUTTON_OUT);
+       
+        // currentMenuStatus = RUNNING;
+        // SDL_RenderCopy(renderer, menuCharacterTexture, NULL,NULL);
+    }
+}
+
+void Menu::renderCharacterMenu(SDL_Renderer* &renderer) {
+    // SDL_Rect rect = {0,0,300,300};
+    if (menuCharacterTexture == nullptr) 
+    SDL_RenderCopy(renderer,menuCharacterTexture, NULL, NULL);
+    pacmanButton ->renderButton(renderer, characterButtonTexture);
+    msPacmanButton ->renderButton(renderer, characterButtonTexture);
+    
+}
+
+void Menu::handleEventCharacter(SDL_Event &e) {
+    selectCharacter = 0;
+    if (e.type == SDL_KEYDOWN) {
+        if (e.key.keysym.sym == SDLK_s || e.key.keysym.sym == SDLK_DOWN) {
+            Mix_PlayChannel(7, navigationSound, 0);
+            currentCharacter = MS_PAC_MAN;
+            msPacmanButton ->setStatus(Button::BUTTON_IN);
+            pacmanButton->setStatus(Button::BUTTON_OUT);
+        }
+        else if (e.key.keysym.sym == SDLK_w || e.key.keysym.sym == SDLK_UP) {
+            Mix_PlayChannel(7, navigationSound, 0);
+            currentCharacter = PAC_MAN;
+            pacmanButton->setStatus(Button::BUTTON_IN);
+            msPacmanButton ->setStatus(Button::BUTTON_OUT);
+        }
+        else if (e.key.keysym.sym == SDLK_RETURN) {
+            Mix_PlayChannel(7, selectionSound, 0);
+            if (currentCharacter == PAC_MAN) selectCharacter = PAC_MAN;
+            else selectCharacter = MS_PAC_MAN;
+        }
+        // return;
+    }
+}
+
+
 
 
 void Menu::render(SDL_Renderer* &renderer, const std::vector<std::string> &scoreData) {
@@ -213,6 +277,16 @@ void Menu::handleEvent(SDL_Event &e, SDL_Renderer* &renderer) {
 bool Menu::isRunning() const {
     return currentMenuStatus == RUNNING;
 }
+
+void Menu::resetSelectCharacter(int reset){
+    selectCharacter = reset;
+}
+
+
+int  Menu::getSelectCharacter() const{
+    return selectCharacter;
+}
+
 
 int Menu::getStatus() const {
     return currentMenuStatus;

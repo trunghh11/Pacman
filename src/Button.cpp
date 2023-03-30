@@ -25,7 +25,15 @@ SDL_Rect Button::getButtonOutLine() {
 }
 
 void Button::loadButton(SDL_Renderer* &renderer, std::string text) {
-    if (text == "") return;
+    if (text == "") {
+        delete selectText;
+        selectText = nullptr;
+        delete normalText;
+        normalText = nullptr;
+        delete selectTextDetail;
+        selectTextDetail = nullptr;
+        return;  
+    } 
     normalText->loadRenderText(renderer, text, normalColor);
     selectText->loadRenderText(renderer, text, selectColor);
     bText = text;
@@ -48,9 +56,10 @@ void Button::loadButton(SDL_Renderer* &renderer, std::string text) {
 void Button::renderButton(SDL_Renderer* &renderer, SDL_Texture* buttonTexture) {       
     if (buttonStatus == BUTTON_IN) {
         SDL_RenderCopy(renderer, buttonTexture, NULL, &buttonRect);
-
-        SDL_SetRenderDrawColor(renderer, selectColor.r, selectColor.g, selectColor.b, selectColor.a);
-        selectText->renderText(renderer, buttonRect.x + buttonRect.w / 2, buttonRect.y + buttonRect.h / 2, TextManager::CENTER);
+        if (selectText != nullptr) {
+            SDL_SetRenderDrawColor(renderer, selectColor.r, selectColor.g, selectColor.b, selectColor.a);
+            selectText->renderText(renderer, buttonRect.x + buttonRect.w / 2, buttonRect.y + buttonRect.h / 2, TextManager::CENTER);
+        }
 
         if (selectTextDetail != nullptr) {
             SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -58,8 +67,10 @@ void Button::renderButton(SDL_Renderer* &renderer, SDL_Texture* buttonTexture) {
         }
     }
     else if (buttonStatus == BUTTON_OUT) {
-        SDL_SetRenderDrawColor(renderer, normalColor.r, normalColor.g, normalColor.b, normalColor.a);
-        normalText->renderText(renderer, buttonRect.x + buttonRect.w / 2, buttonRect.y + buttonRect.h / 2, TextManager::CENTER);
+        if (normalText != nullptr) {
+            SDL_SetRenderDrawColor(renderer, normalColor.r, normalColor.g, normalColor.b, normalColor.a);
+            normalText->renderText(renderer, buttonRect.x + buttonRect.w / 2, buttonRect.y + buttonRect.h / 2, TextManager::CENTER);
+        }
     }
 }
 

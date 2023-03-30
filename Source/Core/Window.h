@@ -16,12 +16,14 @@ class Window {
         SDL_Window* window = nullptr; // cửa sổ game
         SDL_Renderer* renderer = nullptr; // màn hình game
         Menu* startMenu = nullptr; //con trỏ điều khiển menu
+        // Menu* characterMenu = nullptr;
         PlayStateManager* playState = nullptr;
 
         LogStatus* Console = new LogStatus("Window");
         std::vector<std::string> highScore;
         bool Running = false;
         bool runningMenu = false;
+        // bool runningCharacterMenu = false;
     public:
         static const int SCREEN_WIDTH = 882;
         static const int SCREEN_HEIGHT = 496;
