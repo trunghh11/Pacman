@@ -103,8 +103,8 @@ void Menu::initCharacterMenu(SDL_Renderer* &renderer, const std::string imgPath)
         characterButtonTexture = characterButton->loadButtonImage(renderer,"Source/Assets/Menu_Image/choose_character_button.png" );
         menuCharacterTexture = SDL_CreateTextureFromSurface(renderer,Image);
         SDL_FreeSurface(Image);
-        pacmanButton = new Button(28,31,310,263);
-        msPacmanButton = new Button(28,31,186,400);
+        pacmanButton = new Button(28,31,355,255);
+        msPacmanButton = new Button(28,31,190,387);
         pacmanButton ->loadButton(renderer);
         msPacmanButton ->loadButton(renderer);
         pacmanButton ->setStatus(Button::BUTTON_IN);
@@ -116,8 +116,6 @@ void Menu::initCharacterMenu(SDL_Renderer* &renderer, const std::string imgPath)
 }
 
 void Menu::renderCharacterMenu(SDL_Renderer* &renderer) {
-    // SDL_Rect rect = {0,0,300,300};
-    if (menuCharacterTexture == nullptr) 
     SDL_RenderCopy(renderer,menuCharacterTexture, NULL, NULL);
     pacmanButton ->renderButton(renderer, characterButtonTexture);
     msPacmanButton ->renderButton(renderer, characterButtonTexture);

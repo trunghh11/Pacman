@@ -1,19 +1,28 @@
 #include "../Source/Object/TextureSrc.h"
+#include "../Source/Menu/Menu.h"
 
 TextureSrc::TextureSrc() {
-    tileTexture = nullptr;
-    entityTexture = nullptr;
+    blueTileTexture = nullptr;
+    pinkTileTexture = nullptr;
+    PacmanTexture = nullptr;
+    MsPacmanTexture = nullptr;
     ghostScore = nullptr;
     pacmanFrame = 0;
     for (int i = 0; i < 7; ++i) ghostFrame[i] = 0;
 }
 
 TextureSrc::~TextureSrc() {
-    SDL_DestroyTexture(tileTexture);
-    tileTexture = nullptr;
+    SDL_DestroyTexture(blueTileTexture);
+    blueTileTexture = nullptr;
 
-    SDL_DestroyTexture(entityTexture);
-    entityTexture = nullptr;
+    SDL_DestroyTexture(pinkTileTexture);
+    pinkTileTexture = nullptr;
+
+    SDL_DestroyTexture(PacmanTexture);
+    PacmanTexture = nullptr;
+
+    SDL_DestroyTexture(MsPacmanTexture);
+    MsPacmanTexture = nullptr;
 
     SDL_DestroyTexture(ghostScore);
     ghostScore = nullptr;
@@ -29,13 +38,18 @@ bool TextureSrc::pacmanIsDead() {
 }
 
 void TextureSrc::loadTileTexture(SDL_Renderer* &renderer) {
-    SDL_Surface* Image = IMG_Load("Source/Assets/Entity Image/Pacman Tile Labyrinth-pink.png");
+    SDL_Surface* ImageBlue = nullptr;
+    SDL_Surface* ImagePink = nullptr;
 
-    if (Image == nullptr) {
+    ImagePink = IMG_Load("Source/Assets/Entity Image/Pacman Tile Labyrinth-pink.png");
+    ImageBlue = IMG_Load("Source/Assets/Entity Image/Pacman Tile Labyrinth-blue.png");
+
+    if (ImagePink == nullptr || ImageBlue == nullptr) {
         Console->Status( IMG_GetError() );
     }
     else {
-        tileTexture = SDL_CreateTextureFromSurface(renderer, Image);
+        blueTileTexture = SDL_CreateTextureFromSurface(renderer, ImageBlue);
+        pinkTileTexture = SDL_CreateTextureFromSurface(renderer, ImagePink);
         
 
         int x = 0, y = 0;
@@ -48,24 +62,36 @@ void TextureSrc::loadTileTexture(SDL_Renderer* &renderer) {
         Console->Status("Tile Texture got successfully!");
     }
 
-    SDL_FreeSurface(Image);
-    Image = nullptr;
+    SDL_FreeSurface(ImageBlue);
+    SDL_FreeSurface(ImagePink);
+    ImageBlue = nullptr;
+    ImagePink = nullptr;
 }
 
-void TextureSrc::renderTileTexture(SDL_Renderer* &renderer, int tileID, SDL_Rect* dsRect) {
-
-    SDL_RenderCopy(renderer, tileTexture, &tileSprite[ tileID ], dsRect);
+void TextureSrc::renderTileTexture(SDL_Renderer* &renderer, int tileID, SDL_Rect* dsRect, int &selectedCharacter) {
+    if (selectedCharacter == Menu::MS_PAC_MAN) {
+        SDL_RenderCopy(renderer, pinkTileTexture, &tileSprite[ tileID ], dsRect);
+    }
+    if (selectedCharacter == Menu::PAC_MAN) {
+        SDL_RenderCopy(renderer, blueTileTexture, &tileSprite[ tileID ], dsRect);
+    }
 
 }
 
 void TextureSrc::loadPacmanAndGhostTexture(SDL_Renderer* &renderer) {
-    SDL_Surface* Image = IMG_Load("Source/Assets/Entity Image/MsPacman and Ghost Texture.png");
+    SDL_Surface* ImagePacman = nullptr;
+    SDL_Surface* ImageMsPacman = nullptr;
+    SDL_Surface* Image = nullptr;
 
-    if (Image == nullptr) {
+    ImageMsPacman = IMG_Load("Source/Assets/Entity Image/MsPacman and Ghost Texture.png");
+    ImagePacman = IMG_Load("Source/Assets/Entity Image/Pacman and Ghost Texture.png");
+
+    if (ImagePacman == nullptr || ImageMsPacman == nullptr) {
         Console->Status( IMG_GetError() );
     }
     else {
-        entityTexture = SDL_CreateTextureFromSurface(renderer, Image);
+        PacmanTexture = SDL_CreateTextureFromSurface(renderer, ImagePacman);
+        MsPacmanTexture = SDL_CreateTextureFromSurface(renderer, ImageMsPacman);
 
         int posTexX = 0, posTexY = 0;
 
@@ -111,18 +137,20 @@ void TextureSrc::loadPacmanAndGhostTexture(SDL_Renderer* &renderer) {
         ghost[GHOST_SPIRIT][RIGHT][0] = {posTexX, posTexY, 30, 30};
         ghost[GHOST_SPIRIT][RIGHT][1] = {posTexX, posTexY, 30, 30}; posTexX = posTexY = 0;
 
-        SDL_FreeSurface(Image);
         Image = IMG_Load("Source/Assets/Entity Image/ghostscore.png");
         ghostScore = SDL_CreateTextureFromSurface(renderer, Image);
 
         Console->Status("Ghost Texture got successfully!");
     }
 
-    SDL_FreeSurface(Image);
+    SDL_FreeSurface(ImagePacman);
+    SDL_FreeSurface(ImageMsPacman);
+    ImagePacman = nullptr;
+    ImageMsPacman = nullptr;
     Image = nullptr;
 }
 
-void TextureSrc::renderPacmanTexture(SDL_Renderer* &renderer, int posX, int posY, int status) {
+void TextureSrc::renderPacmanTexture(SDL_Renderer* &renderer, int posX, int posY, int status, int &selectedCharacter) {
     SDL_Rect srcRect, dsRect;
     dsRect = {posX - 7 + 217, posY - 7, 30, 30};
     ++pacmanFrame;
@@ -137,8 +165,12 @@ void TextureSrc::renderPacmanTexture(SDL_Renderer* &renderer, int posX, int posY
         case LEFT:  srcRect = pacmanLEFT [ pacmanFrame / 10 ]; break;
         case DEAD_PACMAN: srcRect = pacmanDEAD[pacmanFrame / 10]; break;
     }
-
-    SDL_RenderCopy(renderer, entityTexture, &srcRect, &dsRect);
+    if (selectedCharacter == Menu::PAC_MAN) {
+        SDL_RenderCopy(renderer, PacmanTexture, &srcRect, &dsRect);
+    }
+    if (selectedCharacter == Menu::MS_PAC_MAN) {
+        SDL_RenderCopy(renderer, MsPacmanTexture, &srcRect, &dsRect);
+    }
 }
 
 void TextureSrc::renderGhostTexture(SDL_Renderer* &renderer, int posX, int posY, int ghostID, int status) {
@@ -160,7 +192,7 @@ void TextureSrc::renderGhostTexture(SDL_Renderer* &renderer, int posX, int posY,
             break;
     }
 
-    SDL_RenderCopy(renderer, entityTexture, &srcRect, &dsRect);
+    SDL_RenderCopy(renderer, PacmanTexture, &srcRect, &dsRect);
 }
 
 void TextureSrc::renderGhostScore(SDL_Renderer* &renderer, const int eatenGhostPosX, const int eatenGhostPosY, const int eatenGhostStreak) {

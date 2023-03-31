@@ -180,13 +180,13 @@ void Engine::handleEvent(SDL_Event &e, std::vector<std::string> &scoreData) {
     }
 }
 
-void Engine::render(SDL_Renderer* &renderer, const std::vector<std::string> &scoreData) {
+void Engine::render(SDL_Renderer* &renderer, const std::vector<std::string> &scoreData, int &selectedCharacter) {
     tickManager->stablizeFPS();
     SDL_Rect dsRect;
     for (int i = 0; i < 28; ++i) {
         for (int j = 0; j < 31; ++j) {
             dsRect = {i * 16 + 217, j * 16, 16, 16};
-            objectTexture->renderTileTexture(renderer, map->getTileID(i, j), &dsRect);
+            objectTexture->renderTileTexture(renderer, map->getTileID(i, j), &dsRect, selectedCharacter);
         }
     }
     if (gameManager->getLevel() >= 3 && !apple->isDestroyed()) apple->renderItem(renderer);
@@ -217,10 +217,10 @@ void Engine::render(SDL_Renderer* &renderer, const std::vector<std::string> &sco
                     gameManager->checkScoreData(scoreData);
                 }
             }
-            else objectTexture->renderPacmanTexture(renderer, pacman->getPosX(), pacman->getPosY(), TextureSrc::DEAD_PACMAN);
+            else objectTexture->renderPacmanTexture(renderer, pacman->getPosX(), pacman->getPosY(), TextureSrc::DEAD_PACMAN, selectedCharacter);
         }
         else {
-            objectTexture->renderPacmanTexture(renderer, pacman->getPosX(), pacman->getPosY(), dir);
+            objectTexture->renderPacmanTexture(renderer, pacman->getPosX(), pacman->getPosY(), dir, selectedCharacter);
             PacmanLostALife = false;
         }
         if (waitTime > 0) {

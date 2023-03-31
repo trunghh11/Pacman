@@ -100,6 +100,7 @@ void PlayStateManager::handleEvent(SDL_Event& e, SDL_Renderer* &renderer, bool &
 }
 
 void PlayStateManager::render(SDL_Renderer* &renderer, const std::vector<std::string> &scoreData) {
+    int character = characterMenu->getSelectCharacter();
     if (runPauseMenu) pauseMenu->render(renderer, scoreData);
-    else engine->render(renderer, scoreData);
+    else engine->render(renderer, scoreData, character);
 }

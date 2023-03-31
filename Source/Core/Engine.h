@@ -102,7 +102,7 @@ class Engine {
 
         void loop(bool &exitToMenu);
 
-        void render(SDL_Renderer* &renderer, const std::vector<std::string> &scoreData);
+        void render(SDL_Renderer* &renderer, const std::vector<std::string> &scoreData, int& selectedCharacter);
 
 };
 

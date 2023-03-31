@@ -11,10 +11,12 @@ class TextureSrc {
     private:
         LogStatus* Console = new LogStatus("TextureSrc");
 
-        SDL_Texture* tileTexture;
+        SDL_Texture* blueTileTexture;
+        SDL_Texture* pinkTileTexture;
         SDL_Rect tileSprite[32];
 
-        SDL_Texture* entityTexture;
+        SDL_Texture* PacmanTexture;
+        SDL_Texture* MsPacmanTexture;
         SDL_Texture* ghostScore;
         SDL_Rect pacmanUP[3];
         SDL_Rect pacmanDOWN[3];
@@ -52,11 +54,11 @@ class TextureSrc {
 
         void loadTileTexture(SDL_Renderer* &renderer);
 
-        void renderTileTexture(SDL_Renderer* &renderer, int tileID, SDL_Rect* dsRect);
+        void renderTileTexture(SDL_Renderer* &renderer, int tileID, SDL_Rect* dsRect, int &selectedCharacter);
 
         void loadPacmanAndGhostTexture(SDL_Renderer* &renderer);
 
-        void renderPacmanTexture(SDL_Renderer* &renderer, int posX, int posY, int status);
+        void renderPacmanTexture(SDL_Renderer* &renderer, int posX, int posY, int status, int &selectedCharacter);
 
         void renderGhostTexture(SDL_Renderer* &renderer, int posX, int posY, int ghostID, int status);
 
