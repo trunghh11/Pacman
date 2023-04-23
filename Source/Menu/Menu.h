@@ -17,7 +17,7 @@ class Menu {
         int arrowHSPos; // đại diện cho vị trí của mũi tên trong bảng xếp hạng cao nhất.
         int sizeHS; // đại diện cho size của mảng điểm cao
         int currentButtonID; //đại diện cho ID của button đang được chọn.
-        int currentCharacter;
+        int currentCharacter = PAC_MAN;
         int selectCharacter;
         int currentMenuStatus;//đại diện cho trạng thái của menu.
         int currentHTPid;//đại diện cho ID của trang hướng dẫn chơi hiện tại.

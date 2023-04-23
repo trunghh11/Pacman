@@ -34,7 +34,9 @@ class Engine {
         bool runningEGBoard = false;
         bool eatGreenApple = false;
         bool PacmanLostALife = false;
+        bool checkMapToRespawn = false;
         int waitTime = 0;
+        int mapID;
     protected:
         void respawnObject();
 

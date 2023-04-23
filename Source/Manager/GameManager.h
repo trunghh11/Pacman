@@ -44,7 +44,7 @@ class GameManager {
     protected:
         SDL_Texture* loadImage(SDL_Renderer* &renderer, const std::string imagePath);
     public:
-        const int TOTAL_COINS = 244;
+        int TOTAL_COINS = 0;
         static const int normalCoin = 26;
         static const int superCoin = 27;
         static const int notCoin = 0;

@@ -56,7 +56,7 @@ SDL_Texture* GameManager::loadImage(SDL_Renderer* &renderer, const std::string i
 
 void GameManager::reset() {
     level = 1;
-    life = 500;
+    life = 3;
     scores = 0;
     eatenCoins = 0;
     eatenGhost = -1;

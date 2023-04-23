@@ -12,14 +12,15 @@ class Map {
     private:
         static const int MAP_WIDTH = 28;
         static const int MAP_HEIGHT = 31;
-        const std::string mapFile = "Source/Map/map.txt";
-
+        static const int TOTAL_MAP = 2;
+        const std::string mapFile[TOTAL_MAP] = {"Source/Map/map1.txt", "Source/Map/map2.txt"};
+        // const std::string mapFile2 = "Source/Map/map2.txt";
         LogStatus* Console = new LogStatus("Map");
 
-        int tile[MAP_HEIGHT][MAP_WIDTH];
-        int dist[MAP_WIDTH * MAP_HEIGHT][MAP_WIDTH * MAP_HEIGHT][4];
-        std::pair<int, int> nextCrossID[MAP_HEIGHT][MAP_WIDTH][4];
-        bool markCross[MAP_HEIGHT][MAP_WIDTH][4];
+        int tile[TOTAL_MAP][MAP_HEIGHT][MAP_WIDTH];
+        int dist[TOTAL_MAP][MAP_WIDTH * MAP_HEIGHT][MAP_WIDTH * MAP_HEIGHT][4];
+        std::pair<int, int> nextCrossID[TOTAL_MAP][MAP_HEIGHT][MAP_WIDTH][4];
+        bool markCross[TOTAL_MAP][MAP_HEIGHT][MAP_WIDTH][4];
 
         void findingCrossRoad();
 
@@ -31,6 +32,11 @@ class Map {
         static const int RIGHT = 1;
         static const int DOWN = 2;
         static const int LEFT = 3;
+        int COINS = 0;
+        enum {
+            MAP_1 = 0,
+            MAP_2 = 1,
+        };
 
         Map();
 
@@ -39,23 +45,24 @@ class Map {
             delete Console;
         }
 
-        int getTileID(int x, int y);
+        int getTileID(int x, int y, int mapID);
 
-        std::pair<int, int> getnextCrossID(int x, int y, int dir);
+        std::pair<int, int> getnextCrossID(int mapID, int x, int y, int dir);
 
-        bool isWall(std::pair<int, int> tileID);
+        bool isWall(int mapID, std::pair<int, int> tileID);
 
-        bool iscrossRoad(int y, int x);
+        bool iscrossRoad(int mapID, int y, int x);
 
-        bool canChangeDir(int x, int y, int newDir);
+        bool canChangeDir(int mapID, int x, int y, int newDir);
 
-        bool besideCrossIsWall(std::pair<int, int> Cross, int newDir);
+        bool besideCrossIsWall(int mapID, std::pair<int, int> Cross, int newDir);
 
-        int eatCoins(const int &pacmanTileX, const int &pacmanTileY);
+        int eatCoins(int mapID, const int &pacmanTileX, const int &pacmanTileY);
 
-        int getDist(std::pair<int, int> start, std::pair<int, int> end, int startDir);
+        int getDist(int mapID, std::pair<int, int> start, std::pair<int, int> end, int startDir);
 
-        void reset();
+        void reset(int mapID);
+        void respawn(int mapID);
 };
 
 #endif // _MAP_H_

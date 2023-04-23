@@ -1,10 +1,10 @@
-Unknown: 6640
-Unknowna: 5010
-Unknowna: 4920
-Unknownh: 4420
-Unknown: 3770
-Unknown: 3510
-Unknown: 2860
-Unknown: 1930
-Unknown: 1810
-Unknown: 1350
+Trung Trex: 5330
+Trung: 5180
+Trung Trex: 3310
+Unknown: 2820
+Unknown: 2730
+Unknown: 2170
+Unknown: 1910
+Unknown: 1640
+Unknown: 1620
+Unknown: 1360
