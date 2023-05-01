@@ -3,8 +3,8 @@ Trung: 5180
 Trung Trex: 3310
 Unknown: 2820
 Unknown: 2730
+Unknown: 2360
 Unknown: 2170
 Unknown: 1910
-Unknown: 1640
-Unknown: 1620
-Unknown: 1360
+Unknown: 1690
+Unknown: 1680

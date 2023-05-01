@@ -43,6 +43,7 @@ void Engine::init(SDL_Renderer* &renderer) {
 void Engine::newGame() {
     map->reset(0);
     map->reset(1);
+    mapID = map->MAP_1;
     map->respawn(mapID);
     gameManager->TOTAL_COINS = map->COINS + 4;
     gameManager->reset();
@@ -88,15 +89,15 @@ void Engine::newGame() {
     if (clyde == nullptr) clyde = new Ghost(15, 14, true);
     else clyde->respawn(15,14,true);
 
-    if (gameManager->getLevel() >= 3) {
-        apple->spawnAt(1, 1);
-        if (greendy == nullptr) greendy = new Ghost(12, 15, true);
-        else greendy->respawn(12,15,true);
-    }
-    if (gameManager->getLevel() >= 5) {
-        if (friendy == nullptr) friendy = new Ghost(14, 11, false);
-        else friendy->respawn(14,11,false);
-    }
+    // if (gameManager->getLevel() >= 3) {
+    //     apple->spawnAt(1, 1);
+    //     if (greendy == nullptr) greendy = new Ghost(12, 15, true);
+    //     else greendy->respawn(12,15,true);
+    // }
+    // if (gameManager->getLevel() >= 5) {
+    //     if (friendy == nullptr) friendy = new Ghost(14, 11, false);
+    //     else friendy->respawn(14,11,false);
+    // }
     soundManager->insertPlayList(SoundManager::START);
     tickManager->resetTick(gameManager->getLevel());
     tickManager->pauseTick(true);
@@ -135,12 +136,12 @@ void Engine::respawnObject() {
     pinky ->respawn(13, 14, true);
     inky ->respawn(11, 14, true);
     clyde->respawn(15, 14, true);
-    if (greendy != nullptr) {
-        greendy->respawn(12, 15, true);
-    }
-    if (friendy != nullptr) {
-        friendy->respawn(14, 11, false);
-    }
+    // if (greendy != nullptr) {
+    //     greendy->respawn(12, 15, true);
+    // }
+    // if (friendy != nullptr) {
+    //     friendy->respawn(14, 11, false);
+    // }
     soundManager->reset();
     tickManager->pauseTick(false);
 }
@@ -229,8 +230,8 @@ void Engine::render(SDL_Renderer* &renderer, const std::vector<std::string> &sco
             renderGhost(renderer, pinky , TextureSrc::PINKY );
             renderGhost(renderer, inky  , TextureSrc::INKY  );
             renderGhost(renderer, clyde , TextureSrc::CLYDE );
-            if (greendy != nullptr) renderGhost(renderer, greendy, TextureSrc::GREENDY);
-            if (friendy != nullptr) renderGhost(renderer, friendy, TextureSrc::FRIENDY);
+            // if (greendy != nullptr) renderGhost(renderer, greendy, TextureSrc::GREENDY);
+            // if (friendy != nullptr) renderGhost(renderer, friendy, TextureSrc::FRIENDY);
             if (Mix_Playing(2)) {
                 dsRect = {441 - 82, 285 - 15 - 7, 164, 30};
                 SDL_RenderCopy(renderer, ready, nullptr, &dsRect);
@@ -341,10 +342,10 @@ void Engine::loop(bool &exitToMenu) {
             if (!pinky ->isDead()) pinky ->setFrighten(true);
             if (!inky  ->isDead()) inky  ->setFrighten(true);
             if (!clyde ->isDead()) clyde ->setFrighten(true);
-            if (greendy != nullptr) {
-                if (!greendy->isDead()) greendy->setFrighten(true);
-            }
-            if (friendy != nullptr) tickManager->friendyStartChasePacman();
+            // if (greendy != nullptr) {
+            //     if (!greendy->isDead()) greendy->setFrighten(true);
+            // }
+            // if (friendy != nullptr) tickManager->friendyStartChasePacman();
         }
     }
     if (!tickManager->isFrightenTime()) {
@@ -353,26 +354,26 @@ void Engine::loop(bool &exitToMenu) {
         pinky ->setFrighten(false);
         inky  ->setFrighten(false);
         clyde ->setFrighten(false);
-        if (greendy != nullptr) greendy->setFrighten(false);
+        // if (greendy != nullptr) greendy->setFrighten(false);
     }
     bool scatter = tickManager->isScatteringTime();
     blinky->setScattering(scatter);
     pinky ->setScattering(scatter);
     inky  ->setScattering(scatter);
     clyde ->setScattering(scatter);
-    if (!tickManager->isGreendyChaseTime()) {
-        eatGreenApple = false;
-    }
-    else {
-        if (apple->isDestroyed()) {
-            switch (rand() % 4) {
-                case 0: apple->spawnAt(1, 1); break;
-                case 1: apple->spawnAt(26, 1); break;
-                case 2: apple->spawnAt(26, 29); break;
-                case 3: apple->spawnAt(1, 29); break;
-            }
-        }
-    }
+    // if (!tickManager->isGreendyChaseTime()) {
+    //     eatGreenApple = false;
+    // }
+    // else {
+    //     if (apple->isDestroyed()) {
+    //         switch (rand() % 4) {
+    //             case 0: apple->spawnAt(1, 1); break;
+    //             case 1: apple->spawnAt(26, 1); break;
+    //             case 2: apple->spawnAt(26, 29); break;
+    //             case 3: apple->spawnAt(1, 29); break;
+    //         }
+    //     }
+    // }
 
     pacmanPosX = pacman->getPosX();
     pacmanPosY = pacman->getPosY();
@@ -423,27 +424,27 @@ void Engine::loop(bool &exitToMenu) {
         }
         else clyde->setDestination(Ghost::DEFAULT_CLYDE_TILE_X, Ghost::DEFAULT_CLYDE_TILE_Y);
 
-        if (greendy != nullptr) {
-            if (greendy->isDead())
-                greendy->setDestination(13, 11);
-            else if (eatGreenApple == false)
-                greendy->setDestination(apple->getPosX(), apple->getPosY());
-            else if (!greendy->isFrighten())
-                greendy->setDestination(pacmanTileX, pacmanTileY, 2);
-        }
-        if (friendy != nullptr && tickManager->isFriendyChaseTime()) {
-            friendy->setDestination(pacmanTileX, pacmanTileY, 1);
-        }
+        // if (greendy != nullptr) {
+        //     if (greendy->isDead())
+        //         greendy->setDestination(13, 11);
+        //     else if (eatGreenApple == false)
+        //         greendy->setDestination(apple->getPosX(), apple->getPosY());
+        //     else if (!greendy->isFrighten())
+        //         greendy->setDestination(pacmanTileX, pacmanTileY, 2);
+        // }
+        // if (friendy != nullptr && tickManager->isFriendyChaseTime()) {
+        //     friendy->setDestination(pacmanTileX, pacmanTileY, 1);
+        // }
     }
     pacman->goThroughTunnel();
     ghostMove(blinky);
     ghostMove(pinky);
     ghostMove(inky);
     ghostMove(clyde);
-    ghostMove(greendy);
-    ghostMove(friendy);
+    // ghostMove(greendy);
+    // ghostMove(friendy);
 
-    gameManager->handleGhostPos(pinky, inky, clyde, greendy);
+    gameManager->handleGhostPos(pinky, inky, clyde);
 
     if (gameManager->clearAllCoins()) {
         soundManager->insertPlayList(SoundManager::WINNING);
@@ -538,14 +539,14 @@ void Engine::ghostMove(Ghost* &ghost) {
             ghost->setDead(false);
             soundManager->insertPlayList(SoundManager::REVIVAL_GHOST);
         }
-        else {
-            if (ghost == greendy) {
-                tickManager->greendyStartChasePacman();
-                ghost->resetObjectTile(ghostTileX, ghostTileY);
-                apple->destroyItem();
-                eatGreenApple = true;
-            }
-        }
+        // else {
+        //     if (ghost == greendy) {
+        //         tickManager->greendyStartChasePacman();
+        //         ghost->resetObjectTile(ghostTileX, ghostTileY);
+        //         apple->destroyItem();
+        //         eatGreenApple = true;
+        //     }
+        // }
     }
     pacmanMeatGhost(ghost);
 }

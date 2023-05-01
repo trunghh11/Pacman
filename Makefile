@@ -1,4 +1,4 @@
-SRC_DIR = src
+SRC_DIR = Data
 BUILD_DIR = build/debug
 CC = g++
 SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)

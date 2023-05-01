@@ -83,7 +83,7 @@ class GameManager {
 
         int getRemainCoin() const;
 
-        void handleGhostPos(Ghost* &pinky, Ghost* &inky, Ghost* &clyde, Ghost* &greendy);
+        void handleGhostPos(Ghost* &pinky, Ghost* &inky, Ghost* &clyde);
 
         void handleEGBoard(SDL_Event &e, std::vector<std::string> &scoreData);
 

@@ -32,7 +32,7 @@ class Engine {
         SDL_Texture* nextLevel;
         SDL_Texture* ready;
         bool runningEGBoard = false;
-        bool eatGreenApple = false;
+        // bool eatGreenApple = false;
         bool PacmanLostALife = false;
         bool checkMapToRespawn = false;
         int waitTime = 0;
